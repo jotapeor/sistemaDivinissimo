@@ -4,7 +4,6 @@
  */
 package telas;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import model.PedidosBean;
 import model.PedidosDAO;
@@ -21,7 +20,6 @@ public class InicioCliente extends javax.swing.JFrame {
      */
     public InicioCliente() {
         initComponents();
-//        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     /**
@@ -34,7 +32,6 @@ public class InicioCliente extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         tipoLanche = new javax.swing.JComboBox<>();
         quantidade = new javax.swing.JTextField();
         efetuarPedido = new javax.swing.JButton();
@@ -43,17 +40,12 @@ public class InicioCliente extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         formaPagamento = new javax.swing.JComboBox<>();
         goToLogin = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("InicioCliente");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 102));
-
-        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("                   Tela do cliente");
-        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         tipoLanche.setBackground(new java.awt.Color(255, 255, 255));
         tipoLanche.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -125,6 +117,11 @@ public class InicioCliente extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("Realizar pedido");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -150,27 +147,29 @@ public class InicioCliente extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(36, 36, 36)
-                        .addComponent(formaPagamento, 0, 229, Short.MAX_VALUE)
+                        .addComponent(formaPagamento, 0, 224, Short.MAX_VALUE)
                         .addGap(23, 23, 23))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel4)
                         .addGap(71, 71, 71))))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(81, 81, 81)
-                .addComponent(goToLogin)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(goToLogin))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(221, 221, 221)
+                        .addComponent(jLabel5)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(goToLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(92, 92, 92)
+                .addComponent(goToLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(65, 65, 65)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -193,11 +192,11 @@ public class InicioCliente extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -229,14 +228,14 @@ public class InicioCliente extends javax.swing.JFrame {
                 int qtd = Integer.parseInt(currentQuantidade);
                 double total = 8.50 * qtd;
                 String valorTotal = String.format("%.2f", total);
-                JOptionPane.showMessageDialog(null, "Valor calculado: " + valorTotal); // debug
+                JOptionPane.showMessageDialog(null, "Valor calculado: " + valorTotal);
                 PedidosDAO dao = new PedidosDAO();
                 PedidosBean pedidosFeitos = new PedidosBean(
                         SessaoUsuario.usuarioLogado.getId(),
                         currentTipoLanche,
-                        currentQuantidade,
+                        qtd,
                         currentFormaPagamento,
-                        valorTotal,
+                        total,
                         "Pendente"
                 );
                 dao.efetuarPedido(pedidosFeitos);
@@ -301,10 +300,10 @@ public class InicioCliente extends javax.swing.JFrame {
     private javax.swing.JButton efetuarPedido;
     private javax.swing.JComboBox<String> formaPagamento;
     private javax.swing.JButton goToLogin;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField quantidade;
     private javax.swing.JComboBox<String> tipoLanche;

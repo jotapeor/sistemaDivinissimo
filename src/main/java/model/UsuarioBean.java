@@ -12,17 +12,17 @@ public class UsuarioBean {
 
     private int id;
     private String nome;
-    private String usuario;
+    private String email;
     private String senha;
     private boolean admin;
 
     public UsuarioBean() {
     }
 
-    public UsuarioBean(int id, String nome, String usuario, String senha, boolean admin) {
+    public UsuarioBean(int id, String nome, String email, String senha, boolean admin) {
         this.id = id;
         this.nome = nome;
-        this.usuario = usuario;
+        this.email = email;
         this.senha = senha;
         this.admin = admin;
     }
@@ -43,12 +43,12 @@ public class UsuarioBean {
         this.nome = nome;
     }
 
-    public String getUsuario() {
-        return usuario;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void getEmail(String email) {
+        this.email = email;
     }
 
     public String getSenha() {

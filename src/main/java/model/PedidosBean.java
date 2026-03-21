@@ -13,16 +13,16 @@ public class PedidosBean {
     private int id;
     private int idUsuario;
     private String tipoLanche;
-    private String quantidade;
+    private int quantidade;
     private String formaPagamento;
-    private String valorTotal;
+    private double valorTotal;
     private String statusPedido;
     private String nomeCliente;
 
     public PedidosBean() {
     }
 
-    public PedidosBean(int idUsuario, String tipoLanche, String quantidade, String formaPagamento, String valorTotal, String statusPedido) {
+    public PedidosBean(int idUsuario, String tipoLanche, int quantidade, String formaPagamento, double valorTotal, String statusPedido) {
         this.idUsuario = idUsuario;
         this.tipoLanche = tipoLanche;
         this.quantidade = quantidade;
@@ -55,11 +55,11 @@ public class PedidosBean {
         this.tipoLanche = tipoLanche;
     }
 
-    public String getQuantidade() {
+    public int getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(String quantidade) {
+    public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
 
@@ -71,11 +71,11 @@ public class PedidosBean {
         this.formaPagamento = formaPagamento;
     }
 
-    public String getValorTotal() {
+    public double getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(String valorTotal) {
+    public void setValorTotal(double valorTotal) {
         this.valorTotal = valorTotal;
     }
 

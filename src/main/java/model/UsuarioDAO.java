@@ -21,9 +21,9 @@ public class UsuarioDAO {
             Connection conn = Conexao.conectar();
             PreparedStatement stmt = null;
 
-            stmt = conn.prepareStatement("insert into usuarios (nome, usuario, senha, admin) values (?, ?, ?, ?)");
+            stmt = conn.prepareStatement("insert into usuarios (nome, email, senha, admin) values (?, ?, ?, ?)");
             stmt.setString(1, usuario.getNome());
-            stmt.setString(2, usuario.getUsuario());
+            stmt.setString(2, usuario.getEmail());
             stmt.setString(3, usuario.getSenha());
             stmt.setBoolean(4, false);
 
@@ -40,7 +40,7 @@ public class UsuarioDAO {
             PreparedStatement stmt = null;
             ResultSet rs = null;
             
-            stmt = conn.prepareStatement("select * from usuarios where usuarios.usuario = ? and usuarios.senha = ?");
+            stmt = conn.prepareStatement("select * from usuarios where usuarios.email = ? and usuarios.senha = ?");
             stmt.setString(1, usuario);
             stmt.setString(2, senha);
             
@@ -48,7 +48,7 @@ public class UsuarioDAO {
             if (rs.next()) {
                 user.setId(rs.getInt("id"));
                 user.setNome(rs.getString("nome"));
-                user.setUsuario(rs.getString("usuario"));
+                user.getEmail(rs.getString("email"));
                 user.setSenha(rs.getString("senha"));
                 user.setAdmin(rs.getBoolean("admin"));
             }

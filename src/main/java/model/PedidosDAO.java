@@ -27,9 +27,9 @@ public class PedidosDAO {
             stmt = conn.prepareStatement("insert into pedidos (idUsuario, tipoLanche, quantidade, formaPagamento, valorTotal, statusPedido) values (?, ?, ?, ?, ?, ?)");
             stmt.setInt(1, pedidos.getIdUsuario());
             stmt.setString(2, pedidos.getTipoLanche());
-            stmt.setString(3, pedidos.getQuantidade());
+            stmt.setInt(3, pedidos.getQuantidade());
             stmt.setString(4, pedidos.getFormaPagamento());
-            stmt.setString(5, pedidos.getValorTotal());
+            stmt.setDouble(5, pedidos.getValorTotal());
             stmt.setString(6, pedidos.getStatusPedido());
 
             stmt.executeUpdate();
@@ -52,9 +52,9 @@ public class PedidosDAO {
                 PedidosBean p = new PedidosBean();
                 p.setNomeCliente(rs.getString("nome"));
                 p.setTipoLanche(rs.getString("tipoLanche"));
-                p.setQuantidade(rs.getString("quantidade"));
+                p.setQuantidade(rs.getInt("quantidade"));
                 p.setFormaPagamento(rs.getString("formaPagamento"));
-                p.setValorTotal(rs.getString("valorTotal"));
+                p.setValorTotal(rs.getDouble("valorTotal"));
                 p.setStatusPedido(rs.getString("statusPedido"));
                 lista.add(p);
             }
