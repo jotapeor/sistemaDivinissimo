@@ -7,7 +7,6 @@ package conexao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,27 +14,22 @@ import javax.swing.JOptionPane;
  */
 public class Conexao {
 
+    private static Connection conn = null;
     private static final String url = "jdbc:mysql://localhost:3306/db_divinissimo";
     private static final String usuario = "root";
     private static final String senha = "joaopauloor21";
 
-    public static Connection conectar() {
-        Connection conn = null;
+    private Conexao() {
+    }
+
+    public static synchronized Connection conectar() {
         try {
-            conn = (Connection) DriverManager.getConnection(url, usuario, senha);
+            if (conn == null || conn.isClosed()) {
+                conn = DriverManager.getConnection(url, usuario, senha);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return conn;
-    }
-
-    public void testarConexao() {
-        Connection conn = conectar();
-        if (conn == null) {
-            JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados!");
-        }  else {
-            //JOptionPane.showMessageDialog(null, "Conectado com sucesso!");
-            System.out.println("Conectado com sucesso!");
-        } 
     }
 }
