@@ -15,15 +15,12 @@ import model.UsuarioDAO;
  * @author João Paulo
  */
 public class Login extends javax.swing.JFrame {
-
-    Conexao conn = new Conexao();
-
+    
     /**
      * Creates new form Login
      */
     public Login() {
         initComponents();
-        conn.testarConexao();
         setLocationRelativeTo(null);
     }
 
