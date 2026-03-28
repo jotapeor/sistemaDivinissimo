@@ -4,7 +4,7 @@
  */
 package model;
 
-import conexao.Conexao;
+import connection.Conexao;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
 import java.sql.ResultSet;
+import model.PedidosBean;
 
 /**
  *
@@ -21,6 +22,7 @@ public class PedidosDAO {
 
     public void efetuarPedido(PedidosBean pedidos) {
         try {
+
             Connection conn = Conexao.conectar();
             PreparedStatement stmt = null;
 
@@ -42,14 +44,13 @@ public class PedidosDAO {
     public List<PedidosBean> listarPedidos() {
         List<PedidosBean> lista = new ArrayList<>();
         try {
+
             Connection conn = Conexao.conectar();
-            PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT u.nome, p.tipoLanche, p.quantidade, p.formaPagamento, p.valorTotal, p.statusPedido "
-                    + "FROM pedidos p INNER JOIN usuarios u ON p.idUsuario = u.id"
-            );
+            PreparedStatement stmt = conn.prepareStatement("SELECT p.id, u.nome, p.tipoLanche, p.quantidade, p.formaPagamento, p.valorTotal, p.statusPedido " + "FROM pedidos p INNER JOIN usuarios u ON p.idUsuario = u.id");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 PedidosBean p = new PedidosBean();
+                p.setId(rs.getInt("id"));
                 p.setNomeCliente(rs.getString("nome"));
                 p.setTipoLanche(rs.getString("tipoLanche"));
                 p.setQuantidade(rs.getInt("quantidade"));
@@ -65,11 +66,39 @@ public class PedidosDAO {
         return lista;
     }
 
-    public void entregarPedidos() {
+    public void atualizarStatus(int id, String status) {
         try {
+
             Connection conn = Conexao.conectar();
-            PreparedStatement stmt = conn.prepareStatement("update pedidos set statusPedido = 'Entregue' where statusPedido = 'Pendente' ");
+            PreparedStatement stmt = null;
+
+            stmt = conn.prepareStatement("UPDATE pedidos SET statusPedido = ? WHERE id = ?");
+            stmt.setString(1, status);
+            stmt.setInt(2, id);
+
             stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void deletePedido(int id) {
+        try {
+
+            Connection conn = Conexao.conectar();
+            PreparedStatement stmt = null;
+
+            stmt = conn.prepareStatement("DELETE FROM pedidos WHERE id = ?");
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

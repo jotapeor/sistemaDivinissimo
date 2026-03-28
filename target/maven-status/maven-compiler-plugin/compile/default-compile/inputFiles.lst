@@ -1,10 +1,10 @@
-C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\conexao\Conexao.java
+C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\connection\Conexao.java
 C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\model\PedidosBean.java
 C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\model\PedidosDAO.java
 C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\model\SessaoUsuario.java
 C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\model\UsuarioBean.java
 C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\model\UsuarioDAO.java
-C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\telas\Cadastro.java
-C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\telas\InicioCliente.java
-C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\telas\InicioProprietario.java
-C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\telas\Login.java
+C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\view\Cadastro.java
+C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\view\InicioCliente.java
+C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\view\InicioProprietario.java
+C:\Users\João Paulo\Documents\Aulas\Java\sistemaDivinissimo\src\main\java\view\Login.java
