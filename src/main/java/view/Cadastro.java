@@ -165,7 +165,6 @@ public class Cadastro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
-        // TODO add your handling code here:
         String currentNome = nomeCadastro.getText().trim();
         String currentUser = usuarioCadastro.getText().trim();
         String currentSenha = senhaCadastro.getText().trim();
@@ -183,15 +182,12 @@ public class Cadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     private void nomeCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomeCadastroActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_nomeCadastroActionPerformed
 
     private void usuarioCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usuarioCadastroActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_usuarioCadastroActionPerformed
 
     private void senhaCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senhaCadastroActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_senhaCadastroActionPerformed
 
     /**

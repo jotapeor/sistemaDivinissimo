@@ -205,19 +205,15 @@ public class InicioCliente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void quantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantidadeActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_quantidadeActionPerformed
 
     private void tipoLancheActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipoLancheActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_tipoLancheActionPerformed
 
     private void quantidadeComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_quantidadeComponentHidden
-        // TODO add your handling code here:
     }//GEN-LAST:event_quantidadeComponentHidden
 
     private void efetuarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_efetuarPedidoActionPerformed
-        // TODO add your handling code here:
         String currentTipoLanche = tipoLanche.getSelectedItem().toString();
         String currentQuantidade = quantidade.getText().trim();
         String currentFormaPagamento = formaPagamento.getSelectedItem().toString();
@@ -248,15 +244,12 @@ public class InicioCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_efetuarPedidoActionPerformed
 
     private void formaPagamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_formaPagamentoActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_formaPagamentoActionPerformed
 
     private void quantidadeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_quantidadeKeyReleased
-        // TODO add your handling code here:
     }//GEN-LAST:event_quantidadeKeyReleased
 
     private void goToLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToLoginActionPerformed
-        // TODO add your handling code here:
         new Login().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_goToLoginActionPerformed

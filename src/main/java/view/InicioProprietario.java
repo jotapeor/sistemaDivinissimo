@@ -22,12 +22,35 @@ public class InicioProprietario extends javax.swing.JFrame {
     /**
      * Creates new form InicioAdmin
      */
+    private String ultimoHashPedidos = "";
+
+    private String gerarHash(List<PedidosBean> lista) {
+        StringBuilder sb = new StringBuilder();
+        for (PedidosBean p : lista) {
+            sb.append(p.getId())
+                    .append(p.getNomeCliente())
+                    .append(p.getTipoLanche())
+                    .append(p.getQuantidade())
+                    .append(p.getFormaPagamento())
+                    .append(p.getValorTotal())
+                    .append(p.getStatusPedido())
+                    .append("|");
+        }
+        return sb.toString();
+    }
+
     private void carregarPedidos() {
+        PedidosDAO dao = new PedidosDAO();
+        List<PedidosBean> lista = dao.listarPedidos();
+
+        String novoHash = gerarHash(lista);
+        if (novoHash.equals(ultimoHashPedidos)) {
+            return;
+        }
+        ultimoHashPedidos = novoHash;
+
         DefaultTableModel model = (DefaultTableModel) tablePedidos.getModel();
         model.setRowCount(0);
-
-        PedidosDAO dao = new PedidosDAO();
-        List<PedidosBean> lista = (List<PedidosBean>) dao.listarPedidos();
 
         for (PedidosBean p : lista) {
             model.addRow(new Object[]{
@@ -51,7 +74,7 @@ public class InicioProprietario extends javax.swing.JFrame {
         initComponents();
         carregarPedidos();
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        Timer timer = new Timer(5000, (e) -> carregarPedidos());
+        Timer timer = new Timer(1000, (e) -> carregarPedidos());
         timer.start();
     }
 
@@ -185,38 +208,32 @@ public class InicioProprietario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void goToLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goToLoginActionPerformed
-        // TODO add your handling code here:
         new Login().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_goToLoginActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-
         if (tablePedidos.getSelectedRow() != -1) {
-
             int linhaSelecionada = tablePedidos.getSelectedRow();
-
-            if (linhaSelecionada == -1) {
-                JOptionPane.showMessageDialog(this, "Selecione um pedido para excluir", "Aviso", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
             int id = (int) tablePedidos.getModel().getValueAt(linhaSelecionada, 0);
-//            int id = (int) tablePedidos.getValueAt(linhaSelecionada, 0);
-
             int confirm = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir esse pedido?", "Confirmação", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-
-                PedidosDAO dao = new PedidosDAO();
-                dao.deletePedido(id);
-                JOptionPane.showMessageDialog(this, "Pedido excluido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                String statusAtual = tablePedidos.getModel().getValueAt(linhaSelecionada, 6).toString();
+                if ("Pendente".equals(statusAtual) || "Entregue".equals(statusAtual)) {
+                    PedidosDAO dao = new PedidosDAO();
+                    dao.deletePedido(id);
+                    JOptionPane.showMessageDialog(this, "Pedido excluido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Pedido em andamento nao pode ser excluido!", "Aviso", JOptionPane.WARNING_MESSAGE);
+                }
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um pedido para excluir!", "Aviso", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void attStatusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attStatusButtonActionPerformed
-
         if (tablePedidos.getSelectedRow() != -1) {
 
             DefaultTableModel grcPedidos = (DefaultTableModel) tablePedidos.getModel();
@@ -224,8 +241,6 @@ public class InicioProprietario extends javax.swing.JFrame {
 
             String statusAtual = grcPedidos.getValueAt(linhaSelecionada, 6).toString();
             int idPedido = (int) grcPedidos.getValueAt(linhaSelecionada, 0);
-//            String statusAtual = grcPedidos.getValueAt(linhaSelecionada, 6).toString();
-//            int idPedido = (int) grcPedidos.getValueAt(linhaSelecionada, 0);
 
             String proximoStatus = null;
             PedidosDAO dao = new PedidosDAO();
@@ -241,7 +256,7 @@ public class InicioProprietario extends javax.swing.JFrame {
             dao.atualizarStatus(idPedido, proximoStatus);
 
         } else {
-            JOptionPane.showMessageDialog(null, "Selecione uma tarefa para editar o status.");
+            JOptionPane.showMessageDialog(this, "Selecione um pedido para atualizar!", "Aviso", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_attStatusButtonActionPerformed
 
