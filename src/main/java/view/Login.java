@@ -4,7 +4,6 @@
  */
 package view;
 
-import connection.Conexao;
 import javax.swing.JOptionPane;
 import model.SessaoUsuario;
 import model.UsuarioBean;
@@ -164,17 +163,14 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void usuarioCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usuarioCadastroActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_usuarioCadastroActionPerformed
 
     private void botaoToCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoToCadastrarActionPerformed
-        // TODO add your handling code here:
         new Cadastro().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_botaoToCadastrarActionPerformed
 
     private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
-        // TODO add your handling code here:
         String currentUser = usuarioCadastro.getText().trim();
         String currentSenha = senhaCadastro.getText().trim();
         if (currentUser.equals("")) {
