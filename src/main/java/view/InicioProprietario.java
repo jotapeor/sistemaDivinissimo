@@ -18,12 +18,14 @@ import model.PedidosDAO;
  * @author João Paulo
  */
 public class InicioProprietario extends javax.swing.JFrame {
+// Armazena o hash da última lista para evitar recarregar sem necessidade
 
-    /**
-     * Creates new form InicioAdmin
-     */
     private String ultimoHashPedidos = "";
 
+    /**
+     * Gera uma string única baseada nos dados da lista de pedidos. Usada para
+     * detectar mudanças sem precisar comparar objeto a objeto.
+     */
     private String gerarHash(List<PedidosBean> lista) {
         StringBuilder sb = new StringBuilder();
         for (PedidosBean p : lista) {
@@ -39,31 +41,40 @@ public class InicioProprietario extends javax.swing.JFrame {
         return sb.toString();
     }
 
+    /**
+     * Carrega todos os pedidos na tabela. Só atualiza se os dados mudaram desde
+     * a última verificação.
+     */
     private void carregarPedidos() {
         PedidosDAO dao = new PedidosDAO();
+
+        // Busca todos os pedidos de todos os clientes
         List<PedidosBean> lista = dao.listarPedidos();
 
+        // Compara com o hash anterior para evitar refresh desnecessário
         String novoHash = gerarHash(lista);
         if (novoHash.equals(ultimoHashPedidos)) {
             return;
         }
         ultimoHashPedidos = novoHash;
 
+        // Limpa e recarrega a tabela
         DefaultTableModel model = (DefaultTableModel) tablePedidos.getModel();
         model.setRowCount(0);
 
         for (PedidosBean p : lista) {
             model.addRow(new Object[]{
-                p.getId(),
-                p.getNomeCliente(),
-                p.getTipoLanche(),
-                p.getQuantidade(),
-                p.getFormaPagamento(),
-                p.getValorTotal(),
-                p.getStatusPedido()
+                p.getId(), // coluna 0 — ID (ficará oculta)
+                p.getNomeCliente(), // coluna 1
+                p.getTipoLanche(), // coluna 2
+                p.getQuantidade(), // coluna 3
+                p.getFormaPagamento(), // coluna 4
+                p.getValorTotal(), // coluna 5
+                p.getStatusPedido() // coluna 6
             });
         }
 
+        // Oculta a coluna ID visualmente mas mantém acessível internamente
         if (tablePedidos.getColumnModel().getColumnCount() == 7) {
             TableColumn colId = tablePedidos.getColumnModel().getColumn(0);
             tablePedidos.getColumnModel().removeColumn(colId);
@@ -72,8 +83,17 @@ public class InicioProprietario extends javax.swing.JFrame {
 
     public InicioProprietario() {
         initComponents();
-        carregarPedidos();
+        carregarPedidos(); // Carrega os pedidos ao abrir a tela
+
+        // Oculta a coluna ID uma única vez após inicializar a tabela
+        tablePedidos.getColumnModel().getColumn(0).setMinWidth(0);
+        tablePedidos.getColumnModel().getColumn(0).setMaxWidth(0);
+        tablePedidos.getColumnModel().getColumn(0).setWidth(0);
+
+        // Impede fechar a janela pelo X sem passar pela lógica de logout
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        // Atualiza a tabela a cada 1 segundo para refletir novos pedidos em tempo real
         Timer timer = new Timer(1000, (e) -> carregarPedidos());
         timer.start();
     }
@@ -215,16 +235,25 @@ public class InicioProprietario extends javax.swing.JFrame {
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         if (tablePedidos.getSelectedRow() != -1) {
             int linhaSelecionada = tablePedidos.getSelectedRow();
+
+            // Pega o ID do pedido da coluna 0 (oculta)
             int id = (int) tablePedidos.getModel().getValueAt(linhaSelecionada, 0);
-            int confirm = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir esse pedido?", "Confirmação", JOptionPane.YES_NO_OPTION);
+
+            // Confirma a exclusão com o usuário
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Deseja realmente excluir esse pedido?", "Confirmação", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
+                // Verifica o status atual antes de excluir
                 String statusAtual = tablePedidos.getModel().getValueAt(linhaSelecionada, 6).toString();
+
                 if ("Pendente".equals(statusAtual) || "Entregue".equals(statusAtual)) {
+                    // Status permite exclusão
                     PedidosDAO dao = new PedidosDAO();
                     dao.deletePedido(id);
                     JOptionPane.showMessageDialog(this, "Pedido excluido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 } else {
+                    // Pedido em andamento não pode ser excluído
                     JOptionPane.showMessageDialog(this, "Pedido em andamento nao pode ser excluido!", "Aviso", JOptionPane.WARNING_MESSAGE);
                 }
             }
@@ -235,24 +264,25 @@ public class InicioProprietario extends javax.swing.JFrame {
 
     private void attStatusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_attStatusButtonActionPerformed
         if (tablePedidos.getSelectedRow() != -1) {
-
             DefaultTableModel grcPedidos = (DefaultTableModel) tablePedidos.getModel();
             int linhaSelecionada = tablePedidos.getSelectedRow();
 
+            // Lê o status atual e o ID do pedido selecionado
             String statusAtual = grcPedidos.getValueAt(linhaSelecionada, 6).toString();
             int idPedido = (int) grcPedidos.getValueAt(linhaSelecionada, 0);
 
-            String proximoStatus = null;
-            PedidosDAO dao = new PedidosDAO();
-
+            // Define o próximo status com base no atual
+            String proximoStatus;
             if ("Pendente".equals(statusAtual)) {
                 proximoStatus = "Em andamento";
             } else if ("Em andamento".equals(statusAtual)) {
                 proximoStatus = "Entregue";
             } else {
-                proximoStatus = "Pendente";
+                proximoStatus = "Pendente"; // Cicla de volta ao início
             }
 
+            // Atualiza o status no banco de dados
+            PedidosDAO dao = new PedidosDAO();
             dao.atualizarStatus(idPedido, proximoStatus);
 
         } else {

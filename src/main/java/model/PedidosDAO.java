@@ -21,11 +21,15 @@ public class PedidosDAO {
 
     public void efetuarPedido(PedidosBean pedidos) {
         try {
-
+            // Abre a conexão com o banco de dados através da classe Conexao
             Connection conn = Conexao.conectar();
             PreparedStatement stmt = null;
 
-            stmt = conn.prepareStatement("insert into pedidos (idUsuario, tipoLanche, quantidade, formaPagamento, valorTotal, statusPedido) values (?, ?, ?, ?, ?, ?)");
+            // O uso de '?' (placeholders) impede ataques de SQL Injection
+            String sql = "insert into pedidos (idUsuario, tipoLanche, quantidade, formaPagamento, valorTotal, statusPedido) values (?, ?, ?, ?, ?, ?)";
+            stmt = conn.prepareStatement(sql);
+
+            // Substitui cada '?' pelo valor real vindo do objeto PedidosBean
             stmt.setInt(1, pedidos.getIdUsuario());
             stmt.setString(2, pedidos.getTipoLanche());
             stmt.setInt(3, pedidos.getQuantidade());
@@ -34,23 +38,33 @@ public class PedidosDAO {
             stmt.setString(6, pedidos.getStatusPedido());
 
             stmt.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao registrar pedido: " + e.getMessage());
         }
     }
 
+    /**
+     * Retorna uma lista de todos os pedidos realizados no sistema. Utiliza
+     * INNER JOIN para buscar o nome do usuário que pertence a outra tabela.
+     */
     public List<PedidosBean> listarPedidos() {
         List<PedidosBean> lista = new ArrayList<>();
         try {
-
             Connection conn = Conexao.conectar();
-            PreparedStatement stmt = conn.prepareStatement("SELECT p.id, u.nome, p.tipoLanche, p.quantidade, p.formaPagamento, p.valorTotal, p.statusPedido " + "FROM pedidos p INNER JOIN usuarios u ON p.idUsuario = u.id");
-            ResultSet rs = stmt.executeQuery();
+            // A consulta une a tabela pedidos (p) com usuarios (u) usando o ID como vínculo
+            String sql = "SELECT p.id, u.nome, p.tipoLanche, p.quantidade, p.formaPagamento, p.valorTotal, p.statusPedido "
+                    + "FROM pedidos p INNER JOIN usuarios u ON p.idUsuario = u.id";
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery(); // Executa a busca e guarda o resultado no ResultSet
+
+            // Enquanto houver linhas no resultado da consulta, cria um novo objeto e adiciona na lista
             while (rs.next()) {
                 PedidosBean p = new PedidosBean();
                 p.setId(rs.getInt("id"));
-                p.setNomeCliente(rs.getString("nome"));
+                p.setNomeCliente(rs.getString("nome")); // Nome vindo da tabela de usuários
                 p.setTipoLanche(rs.getString("tipoLanche"));
                 p.setQuantidade(rs.getInt("quantidade"));
                 p.setFormaPagamento(rs.getString("formaPagamento"));
@@ -60,44 +74,38 @@ public class PedidosDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao carregar lista: " + e.getMessage());
         }
         return lista;
     }
 
     public void atualizarStatus(int id, String status) {
         try {
-
             Connection conn = Conexao.conectar();
-            PreparedStatement stmt = null;
+            String sql = "UPDATE pedidos SET statusPedido = ? WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stmt = conn.prepareStatement("UPDATE pedidos SET statusPedido = ? WHERE id = ?");
             stmt.setString(1, status);
             stmt.setInt(2, id);
 
             stmt.executeUpdate();
+
             stmt.close();
             conn.close();
-
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
     }
 
     public void deletePedido(int id) {
         try {
-
             Connection conn = Conexao.conectar();
-            PreparedStatement stmt = null;
-
-            stmt = conn.prepareStatement("DELETE FROM pedidos WHERE id = ?");
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM pedidos WHERE id = ?");
             stmt.setInt(1, id);
 
             stmt.executeUpdate();
             stmt.close();
             conn.close();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -107,10 +115,12 @@ public class PedidosDAO {
         List<PedidosBean> lista = new ArrayList<>();
         try {
             Connection conn = Conexao.conectar();
-            PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT p.id, p.tipoLanche, p.quantidade, p.formaPagamento, p. statusPedido FROM pedidos p WHERE idUsuario = ?"
-            );
+            String sql = "SELECT p.id, p.tipoLanche, p.quantidade, p.formaPagamento, p.statusPedido FROM pedidos p WHERE idUsuario = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            // Pega o ID do usuário que logou no sistema
             stmt.setInt(1, SessaoUsuario.usuarioLogado.getId());
+
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 PedidosBean p = new PedidosBean();
@@ -123,7 +133,7 @@ public class PedidosDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao buscar seus pedidos: " + e.getMessage());
         }
         return lista;
     }
@@ -131,9 +141,9 @@ public class PedidosDAO {
     public void atualizarPedido(int id, String tipoLanche, int quantidade, String formaPagamento) {
         try {
             Connection conn = Conexao.conectar();
-            PreparedStatement stmt = conn.prepareStatement(
-                    "UPDATE pedidos SET tipoLanche = ?, quantidade = ?, formaPagamento = ? WHERE id = ?"
-            );
+            String sql = "UPDATE pedidos SET tipoLanche = ?, quantidade = ?, formaPagamento = ? WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
             stmt.setString(1, tipoLanche);
             stmt.setInt(2, quantidade);
             stmt.setString(3, formaPagamento);

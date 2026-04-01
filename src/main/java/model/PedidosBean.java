@@ -17,7 +17,7 @@ public class PedidosBean {
     private String formaPagamento;
     private double valorTotal;
     private String statusPedido;
-    private String nomeCliente;
+    private String nomeCliente; // Atributo auxiliar para exibir o nome do usuário em listagens
 
     public PedidosBean() {
     }
