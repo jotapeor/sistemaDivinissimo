@@ -178,20 +178,75 @@ public class Cadastro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCadastrarActionPerformed
-        String currentNome = nomeCadastro.getText().trim();
-        String currentUser = emailCadastro.getText().trim();
-        String currentSenha = confirmarSenhaCadastro.getText().trim();
 
-        if ((nomeCadastro.getText().isEmpty()) || (emailCadastro.getText().isEmpty()) || (confirmarSenhaCadastro.getText().isEmpty())) {
+        // Captura e limpa os valores digitados nos campos
+        String currentNome = nomeCadastro.getText().trim();
+        String currentEmail = emailCadastro.getText().trim();
+        String currentSenha = senhaCadastro.getText().trim();
+        String currentConfirmar = confirmarSenhaCadastro.getText().trim();
+
+        // 1. Verifica se todos os campos foram preenchidos
+        if (currentNome.isEmpty() || currentEmail.isEmpty() || currentSenha.isEmpty() || currentConfirmar.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Preencha todos os campos!");
-        } else {
-            JOptionPane.showMessageDialog(null, "Cadastrado com sucesso!");
-            UsuarioDAO dao = new UsuarioDAO();
-            UsuarioBean usuarioCadastrado = new UsuarioBean(0, currentNome, currentUser, currentSenha, false);
-            dao.cadastrar(usuarioCadastrado);
-            new Login().setVisible(true);
-            this.setVisible(false);
+            return;
         }
+
+        // 2. Verifica se o nome tem pelo menos 3 caracteres
+        if (currentNome.length() < 3) {
+            JOptionPane.showMessageDialog(null, "O nome deve ter pelo menos 3 caracteres!");
+            return;
+        }
+
+        // 3. Verifica se o email tem formato válido (ex: usuario@dominio.com)
+        if (!currentEmail.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+            JOptionPane.showMessageDialog(null, "Informe um email válido!");
+            return;
+        }
+
+        // 4. Validações de força da senha — coleta todos os erros de uma vez
+        if (currentSenha.length() < 8) {
+            JOptionPane.showMessageDialog(null, "A senha deve ter pelo menos 8 caracteres!");
+            return;
+        }
+        if (!currentSenha.matches(".*[A-Z].*")) {
+            JOptionPane.showMessageDialog(null, "A senha deve conter pelo menos 1 letra maiúscula!");
+            return;
+        }
+        if (!currentSenha.matches(".*[0-9].*")) {
+            JOptionPane.showMessageDialog(null, "A senha deve conter pelo menos 1 número!");
+            return;
+        }
+        if (!currentSenha.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?].*")) {
+            JOptionPane.showMessageDialog(null, "A senha deve conter pelo menos 1 caractere especial!");
+            return;
+        }
+
+        // 5. Verifica se os dois campos de senha são iguais
+        if (!currentSenha.equals(currentConfirmar)) {
+            JOptionPane.showMessageDialog(null, "As senhas não coincidem!");
+            return;
+        }
+
+        // 6. Verifica no banco se nome ou email já estão cadastrados
+        UsuarioDAO dao = new UsuarioDAO();
+        if (dao.nomeExiste(currentNome)) {
+            JOptionPane.showMessageDialog(null, "Este nome já está cadastrado!");
+            return;
+        }
+        if (dao.emailExiste(currentEmail)) {
+            JOptionPane.showMessageDialog(null, "Este email já está cadastrado!");
+            return;
+        }
+
+        // Todas as validações passaram — cria o objeto e salva no banco
+        // admin = false pois todo cadastro pela tela é de cliente comum
+        UsuarioBean usuarioCadastrado = new UsuarioBean(0, currentNome, currentEmail, currentSenha, false);
+        dao.cadastrar(usuarioCadastrado);
+        JOptionPane.showMessageDialog(null, "Cadastrado com sucesso!");
+
+        // Redireciona para a tela de login após o cadastro
+        new Login().setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_botaoCadastrarActionPerformed
 
     private void nomeCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomeCadastroActionPerformed
@@ -204,7 +259,6 @@ public class Cadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_confirmarSenhaCadastroActionPerformed
 
     private void senhaCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senhaCadastroActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_senhaCadastroActionPerformed
 
     /**

@@ -19,12 +19,13 @@ public class UsuarioDAO {
     public void cadastrar(UsuarioBean usuario) {
         try {
             Connection conn = Conexao.conectar();
-            PreparedStatement stmt = null;
+            String sql = "insert into usuarios (nome, email, senha, admin) values (?, ?, ?, ?)";
+            PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stmt = conn.prepareStatement("insert into usuarios (nome, email, senha, admin) values (?, ?, ?, ?)");
             stmt.setString(1, usuario.getNome());
             stmt.setString(2, usuario.getEmail());
             stmt.setString(3, usuario.getSenha());
+            // Hardcoded como 'false' para garantir que ninguém se cadastre como admin por conta própria
             stmt.setBoolean(4, false);
 
             stmt.executeUpdate();
@@ -37,24 +38,54 @@ public class UsuarioDAO {
         UsuarioBean user = new UsuarioBean();
         try {
             Connection conn = Conexao.conectar();
-            PreparedStatement stmt = null;
-            ResultSet rs = null;
-            
-            stmt = conn.prepareStatement("select * from usuarios where usuarios.email = ? and usuarios.senha = ?");
+            // Busca um registro que coincida exatamente com o e-mail E a senha informados
+            String sql = "select * from usuarios where email = ? and senha = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
             stmt.setString(1, usuario);
             stmt.setString(2, senha);
-            
-            rs = stmt.executeQuery();
+
+            ResultSet rs = stmt.executeQuery();
+
+            // Se o banco retornar uma linha, as credenciais são válidas
             if (rs.next()) {
                 user.setId(rs.getInt("id"));
                 user.setNome(rs.getString("nome"));
                 user.setEmail(rs.getString("email"));
                 user.setSenha(rs.getString("senha"));
-                user.setAdmin(rs.getBoolean("admin"));
+                user.setAdmin(rs.getBoolean("admin")); // Define se o usuário tem poderes de gerente
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return user;
+    }
+
+    public boolean nomeExiste(String nome) {
+        try {
+            Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement("SELECT id FROM usuarios WHERE nome = ?");
+            stmt.setString(1, nome);
+            ResultSet rs = stmt.executeQuery();
+
+            // rs.next() retorna verdadeiro se a consulta encontrou pelo menos um registro
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean emailExiste(String email) {
+        try {
+            Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement("SELECT id FROM usuarios WHERE email = ?");
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

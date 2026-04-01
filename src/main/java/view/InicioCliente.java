@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import model.PedidosBean;
 import model.PedidosDAO;
 import model.SessaoUsuario;
@@ -20,11 +19,13 @@ import model.SessaoUsuario;
  */
 public class InicioCliente extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Inicio
-     */
+    // Armazena o hash da última lista carregada para evitar recarregar a tabela sem necessidade
     private String ultimoHashPedidos = "";
 
+    /**
+     * Gera uma string única (hash) baseada nos dados da lista de pedidos. Usada
+     * para detectar se houve mudança nos dados desde a última atualização.
+     */
     private String gerarHash(List<PedidosBean> lista) {
         StringBuilder sb = new StringBuilder();
         for (PedidosBean p : lista) {
@@ -40,29 +41,38 @@ public class InicioCliente extends javax.swing.JFrame {
         return sb.toString();
     }
 
+    /**
+     * Carrega todos os pedidos na tabela. Só atualiza se os dados mudaram desde
+     * a última verificação.
+     */
     private void carregarPedidos() {
         PedidosDAO dao = new PedidosDAO();
+
+        // Busca apenas os pedidos do cliente logado na sessão
         List<PedidosBean> lista = dao.listarPedidosCliente();
 
+        // Gera o hash atual e compara com o anterior — evita refresh desnecessário
         String novoHash = gerarHash(lista);
         if (novoHash.equals(ultimoHashPedidos)) {
-            return;
+            return; // Dados não mudaram, não precisa atualizar a tabela
         }
         ultimoHashPedidos = novoHash;
 
+        // Limpa a tabela e recarrega com os dados atuais
         DefaultTableModel model = (DefaultTableModel) tablePedidosCliente.getModel();
         model.setRowCount(0);
 
         for (PedidosBean p : lista) {
             model.addRow(new Object[]{
-                p.getId(),
-                p.getTipoLanche(),
-                p.getQuantidade(),
-                p.getFormaPagamento(),
-                p.getStatusPedido()
+                p.getId(), // coluna 0 — ID (ficará oculta)
+                p.getTipoLanche(), // coluna 1
+                p.getQuantidade(), // coluna 2
+                p.getFormaPagamento(), // coluna 3
+                p.getStatusPedido() // coluna 4 — somente leitura para o cliente
             });
         }
 
+        // Oculta a coluna ID visualmente (largura 0), mas mantém os dados acessíveis internamente
         tablePedidosCliente.getColumnModel().getColumn(0).setMinWidth(0);
         tablePedidosCliente.getColumnModel().getColumn(0).setMaxWidth(0);
         tablePedidosCliente.getColumnModel().getColumn(0).setWidth(0);
@@ -70,8 +80,17 @@ public class InicioCliente extends javax.swing.JFrame {
 
     public InicioCliente() {
         initComponents();
-        carregarPedidos();
+        carregarPedidos(); // Carrega os pedidos ao abrir a tela
+
+        // Oculta a coluna ID uma única vez após inicializar a tabela
+        tablePedidosCliente.getColumnModel().getColumn(0).setMinWidth(0);
+        tablePedidosCliente.getColumnModel().getColumn(0).setMaxWidth(0);
+        tablePedidosCliente.getColumnModel().getColumn(0).setWidth(0);
+
+        // Impede que o usuário feche a janela pelo X sem passar pela lógica de logout
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        // Timer que atualiza a tabela a cada 1 segundo para refletir mudanças de status em tempo real
         Timer timer = new Timer(1000, (e) -> carregarPedidos());
         timer.start();
     }
@@ -316,6 +335,7 @@ public class InicioCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_quantidadeComponentHidden
 
     private void efetuarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_efetuarPedidoActionPerformed
+        // Captura os valores selecionados/digitados nos campos
         String currentTipoLanche = tipoLanche.getSelectedItem().toString();
         String currentQuantidade = quantidade.getText().trim();
         String currentFormaPagamento = formaPagamento.getSelectedItem().toString();
@@ -325,20 +345,26 @@ public class InicioCliente extends javax.swing.JFrame {
         } else {
             try {
                 int qtd = Integer.parseInt(currentQuantidade);
+
+                // Calcula o valor total com base na quantidade (preço fixo R$ 8,50)
                 double total = 8.50 * qtd;
                 String valorTotal = String.format("%.2f", total);
                 JOptionPane.showMessageDialog(null, "Valor calculado: " + valorTotal);
+
+                // Cria o objeto pedido com os dados do cliente logado na sessão
                 PedidosDAO dao = new PedidosDAO();
                 PedidosBean pedidosFeitos = new PedidosBean(
-                        SessaoUsuario.usuarioLogado.getId(),
+                        SessaoUsuario.usuarioLogado.getId(), // ID do cliente logado
                         currentTipoLanche,
                         qtd,
                         currentFormaPagamento,
                         total,
-                        "Pendente"
+                        "Pendente" // Todo pedido começa com status Pendente
                 );
+
                 dao.efetuarPedido(pedidosFeitos);
                 JOptionPane.showMessageDialog(null, "Pedido efetuado com sucesso!");
+
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Quantidade deve ser um número!");
             }
@@ -361,8 +387,10 @@ public class InicioCliente extends javax.swing.JFrame {
             DefaultTableModel grcPedidos = (DefaultTableModel) tablePedidosCliente.getModel();
             int linhaSelecionada = tablePedidosCliente.getSelectedRow();
 
+            // Lê o status da coluna 4 para verificar se o pedido pode ser editado
             String status = grcPedidos.getValueAt(linhaSelecionada, 4).toString();
 
+            // Bloqueia edição se o status não for "Pendente"
             if (!status.equals("Pendente")) {
                 JOptionPane.showMessageDialog(this,
                         "Este pedido não pode ser editado pois está com status: " + status,
@@ -371,7 +399,10 @@ public class InicioCliente extends javax.swing.JFrame {
                 return;
             }
 
+            // Pega o ID do pedido da coluna 0 (oculta)
             int id = Integer.parseInt(grcPedidos.getValueAt(linhaSelecionada, 0).toString());
+
+            // Lê os novos valores dos campos da tela
             String novoTipo = tipoLanche.getSelectedItem().toString();
             String novaQtdStr = quantidade.getText().trim();
             String novaPagamento = formaPagamento.getSelectedItem().toString();
@@ -383,10 +414,13 @@ public class InicioCliente extends javax.swing.JFrame {
 
             try {
                 int novaQtd = Integer.parseInt(novaQtdStr);
+
+                // Atualiza no banco de dados
                 PedidosDAO dao = new PedidosDAO();
                 dao.atualizarPedido(id, novoTipo, novaQtd, novaPagamento);
                 JOptionPane.showMessageDialog(this, "Pedido atualizado com sucesso!");
 
+                // Atualiza os valores visualmente na tabela sem precisar recarregar tudo
                 grcPedidos.setValueAt(novoTipo, linhaSelecionada, 1);
                 grcPedidos.setValueAt(novaQtd, linhaSelecionada, 2);
                 grcPedidos.setValueAt(novaPagamento, linhaSelecionada, 3);

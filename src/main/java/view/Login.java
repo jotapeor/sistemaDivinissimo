@@ -107,9 +107,9 @@ public class Login extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(botaoToCadastrar)
-                                .addGap(48, 48, 48))
+                                .addGap(54, 54, 54))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(botaoLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(75, 75, 75))))
@@ -177,22 +177,35 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoToCadastrarActionPerformed
 
     private void botaoLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoLoginActionPerformed
+
+        // Captura os valores digitados nos campos
         String currentUser = usuarioCadastro.getText().trim();
         String currentSenha = senhaCadastro.getText().trim();
+
+        // Verifica se os campos estão preenchidos
         if (currentUser.isEmpty() || currentSenha.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Preencha o campo email e senha corretamente!");
         } else {
             UsuarioDAO dao = new UsuarioDAO();
+
+            // Tenta encontrar o usuário no banco com email e senha informados
             UsuarioBean usuarioLogado = dao.logar(currentUser, currentSenha);
+
             if (usuarioLogado.getId() > 0 && usuarioLogado.isAdmin()) {
+
+                // Usuário é administrador (proprietário) — salva na sessão e abre tela do proprietário
                 SessaoUsuario.usuarioLogado = usuarioLogado;
                 new InicioProprietario().setVisible(true);
                 this.setVisible(false);
             } else if (usuarioLogado.getId() > 0) {
+
+                // Usuário é cliente comum — salva na sessão e abre tela do cliente
                 SessaoUsuario.usuarioLogado = usuarioLogado;
                 new InicioCliente().setVisible(true);
                 this.setVisible(false);
             } else {
+
+                // Nenhum usuário encontrado com essas credenciais
                 JOptionPane.showMessageDialog(null, "Usuário e senha incorretos!");
             }
         }
