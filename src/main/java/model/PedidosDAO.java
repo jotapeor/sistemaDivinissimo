@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
 import java.sql.ResultSet;
-import model.PedidosBean;
 
 /**
  *
@@ -99,6 +98,50 @@ public class PedidosDAO {
             stmt.close();
             conn.close();
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<PedidosBean> listarPedidosCliente() {
+        List<PedidosBean> lista = new ArrayList<>();
+        try {
+            Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT p.id, p.tipoLanche, p.quantidade, p.formaPagamento, p. statusPedido FROM pedidos p WHERE idUsuario = ?"
+            );
+            stmt.setInt(1, SessaoUsuario.usuarioLogado.getId());
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                PedidosBean p = new PedidosBean();
+                p.setId(rs.getInt("id"));
+                p.setTipoLanche(rs.getString("tipoLanche"));
+                p.setQuantidade(rs.getInt("quantidade"));
+                p.setFormaPagamento(rs.getString("formaPagamento"));
+                p.setStatusPedido(rs.getString("statusPedido"));
+                lista.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    public void atualizarPedido(int id, String tipoLanche, int quantidade, String formaPagamento) {
+        try {
+            Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(
+                    "UPDATE pedidos SET tipoLanche = ?, quantidade = ?, formaPagamento = ? WHERE id = ?"
+            );
+            stmt.setString(1, tipoLanche);
+            stmt.setInt(2, quantidade);
+            stmt.setString(3, formaPagamento);
+            stmt.setInt(4, id);
+
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
