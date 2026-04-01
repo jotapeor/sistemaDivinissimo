@@ -5,13 +5,13 @@
 package view;
 
 import java.util.List;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import model.PedidosBean;
 import model.PedidosDAO;
+import model.SessaoUsuario;
 
 /**
  *
@@ -82,6 +82,7 @@ public class InicioProprietario extends javax.swing.JFrame {
     }
 
     public InicioProprietario() {
+        setTitle(SessaoUsuario.usuarioLogado.getNome());
         initComponents();
         carregarPedidos(); // Carrega os pedidos ao abrir a tela
 
@@ -89,9 +90,6 @@ public class InicioProprietario extends javax.swing.JFrame {
         tablePedidos.getColumnModel().getColumn(0).setMinWidth(0);
         tablePedidos.getColumnModel().getColumn(0).setMaxWidth(0);
         tablePedidos.getColumnModel().getColumn(0).setWidth(0);
-
-        // Impede fechar a janela pelo X sem passar pela lógica de logout
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         // Atualiza a tabela a cada 1 segundo para refletir novos pedidos em tempo real
         Timer timer = new Timer(1000, (e) -> carregarPedidos());
@@ -116,7 +114,6 @@ public class InicioProprietario extends javax.swing.JFrame {
         attStatusButton = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("InicioProprietario");
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 102));
