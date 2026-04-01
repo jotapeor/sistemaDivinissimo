@@ -9,8 +9,10 @@ view\InicioProprietario$2.class
 view\InicioCliente.class
 view\Login$2.class
 model\SessaoUsuario.class
+view\InicioCliente$10.class
 view\Login$4.class
 model\UsuarioDAO.class
+view\InicioCliente$9.class
 view\Cadastro$5.class
 view\InicioProprietario$5.class
 view\InicioCliente$4.class
@@ -22,6 +24,7 @@ view\Login$1.class
 view\InicioProprietario$3.class
 view\Cadastro$2.class
 view\InicioCliente$2.class
+view\Cadastro$6.class
 view\Login.class
 view\InicioProprietario$4.class
 view\InicioCliente$5.class

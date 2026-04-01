@@ -48,7 +48,7 @@ public class UsuarioDAO {
             if (rs.next()) {
                 user.setId(rs.getInt("id"));
                 user.setNome(rs.getString("nome"));
-                user.getEmail(rs.getString("email"));
+                user.setEmail(rs.getString("email"));
                 user.setSenha(rs.getString("senha"));
                 user.setAdmin(rs.getBoolean("admin"));
             }
