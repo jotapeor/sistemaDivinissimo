@@ -95,7 +95,7 @@ public class Cadastro extends javax.swing.JFrame {
         jLabel4.setText("Cadastro");
         jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jLabel5.setIcon(new javax.swing.ImageIcon("C:\\Users\\João Paulo\\Documents\\Aulas\\Java\\sistemaDivinissimo\\src\\main\\java\\images\\Adobe Express - file.jpg")); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Adobe Express - file.jpg"))); // NOI18N
         jLabel5.setText("jLabel5");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
