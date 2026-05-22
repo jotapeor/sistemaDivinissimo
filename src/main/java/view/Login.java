@@ -92,7 +92,7 @@ public class Login extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Ou: ");
 
-        jLabel6.setIcon(new javax.swing.ImageIcon("C:\\Users\\João Paulo\\Documents\\Aulas\\Java\\sistemaDivinissimo\\src\\main\\java\\images\\Adobe Express - file.jpg")); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Adobe Express - file.jpg"))); // NOI18N
         jLabel6.setText("jLabel6");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
